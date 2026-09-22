@@ -1,1 +1,216 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mapa de acciones — Socios estratégicos</title>
+<style>
+:root{
+  --green:#1f5d45; --green2:#2f7d5b; --mint:#eaf4ef; --ink:#173027;
+  --muted:#66756e; --line:#dce7e1; --bg:#f5f7f6; --white:#fff;
+  --accent:#d7eadf; --shadow:0 8px 24px rgba(24,54,43,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.header{background:linear-gradient(135deg,#174c38,#2f7556);color:white;padding:26px 32px 24px}
+.header-inner{max-width:1450px;margin:auto}
+.kicker{font-size:12px;letter-spacing:.12em;text-transform:uppercase;opacity:.78}
+h1{margin:5px 0 4px;font-size:29px;font-weight:750}
+.subtitle{opacity:.88;max-width:900px;font-size:14px;line-height:1.5}
+.wrap{max-width:1450px;margin:20px auto;padding:0 22px}
+.grid{display:grid;grid-template-columns:300px 1fr;gap:18px}
+.panel,.card{background:var(--white);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
+.sidebar{padding:18px;position:sticky;top:15px;height:max-content}
+label{display:block;font-size:12px;font-weight:700;color:var(--muted);margin:14px 0 6px}
+input,select{width:100%;padding:10px 11px;border:1px solid #ccd9d2;border-radius:9px;background:white;color:var(--ink);font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.stat{padding:15px 16px;background:white;border:1px solid var(--line);border-radius:12px}
+.stat b{display:block;font-size:23px;color:var(--green)}
+.stat span{font-size:11px;color:var(--muted)}
+.profile{padding:20px}
+.profile-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;border-bottom:1px solid var(--line);padding-bottom:15px}
+.org-name{font-size:23px;font-weight:750;margin-bottom:8px}
+.badges{display:flex;flex-wrap:wrap;gap:7px}
+.badge{background:var(--mint);color:var(--green);border:1px solid #d1e6da;padding:5px 9px;border-radius:99px;font-size:11px}
+.meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:16px 0}
+.meta-item{padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fbfcfb}
+.meta-item small{display:block;color:var(--muted);font-size:10px;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.meta-item strong{font-size:13px}
+.theme{margin-top:14px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.theme-title{padding:13px 15px;background:#f7faf8;font-weight:750;font-size:15px;color:var(--green)}
+.qblock{padding:15px;border-top:1px solid var(--line)}
+.qtitle{font-size:13px;font-weight:750;margin-bottom:10px}
+.actions{display:flex;flex-wrap:wrap;gap:7px}
+.action{font-size:12px;border:1px solid var(--line);padding:7px 9px;border-radius:8px;background:#fff}
+.action.yes{background:var(--mint);border-color:#c8e1d2;color:#205a43;font-weight:650}
+.action.no{color:#a0aaa5;background:#fafbfa}
+.other{margin-top:9px;font-size:12px;color:#5b6962;background:#fafbf9;border-left:3px solid #b6cfc1;padding:8px 10px}
+.empty{padding:45px 20px;text-align:center;color:var(--muted)}
+.directory{margin-top:18px;padding:18px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:10px;margin-bottom:12px}
+.section-head h2{margin:0;font-size:18px}
+.section-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
+.action-select{max-width:520px}
+.org-list{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.org-result{padding:10px 12px;border:1px solid var(--line);border-radius:9px;display:flex;justify-content:space-between;gap:10px}
+.org-result strong{font-size:12px}.org-result span{font-size:11px;color:var(--muted)}
+.note{margin-top:14px;font-size:11px;color:var(--muted);line-height:1.5}
+.footer{max-width:1450px;margin:15px auto 30px;padding:0 22px;color:#7a8781;font-size:11px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}.sidebar{position:static}.stats{grid-template-columns:repeat(2,1fr)}.meta{grid-template-columns:1fr}.org-list{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="header">
+ <div class="header-inner">
+  <div class="kicker">LAN Pawanka · África</div>
+  <h1>Organizations Action Map</h1>
+  <div class="subtitle">Explore which organizations carry out specific actions and view each organization’s profile. This view includes only the information selected for the analysis: organization, territorial scope, type, legal nature, specificity, and actions from questions 11–18.</div>
+ </div>
+</header>
+<div class="wrap">
+ <div class="grid">
+  <aside class="panel sidebar">
+   <strong>Filter organizations</strong>
+   <label for="search">Search organization</label>
+   <input id="search" placeholder="Type a name..." oninput="render()">
+   <label for="scope">Territorial scope</label>
+   <select id="scope" onchange="render()"><option value="">All</option></select>
+   <label for="type">Organization type</label>
+   <select id="type" onchange="render()"><option value="">All</option></select>
+   <label for="legal">Legal nature</label>
+   <select id="legal" onchange="render()"><option value="">All</option></select>
+   <label for="specificity">Specificity</label>
+   <select id="specificity" onchange="render()">
+    <option value="">All</option><option value="Women">Women</option><option value="Research center">Research center</option><option value="Youth">Youth</option>
+   </select>
+   <label for="org">Organization</label>
+   <select id="org" onchange="renderProfile()"></select>
+   <div class="note">Las opciones “Other” se muestran como texto cuando la organización registró una respuesta adicional. No se incluyeron las preguntas 2, 4, 8, 9, 10, 19 y 20.</div>
+  </aside>
+  <main>
+   <div id="stats" class="stats"></div>
+   <div id="profile" class="card profile"></div>
+   <div class="card directory">
+    <div class="section-head">
+     <div><h2>Organizations by action</h2><p>Select an action to quickly identify which organizations carry it out.</p></div>
+     <select id="actionSelect" class="action-select" onchange="renderDirectory()"></select>
+    </div>
+    <div id="directory"></div>
+   </div>
+  </main>
+ </div>
+</div>
+<div class="footer">Base: 15 organizations. Standalone dashboard: no internet connection or external files required.</div>
 
+<script>
+const DB = {"records": [{"org": "SORALO", "scope": "Regional", "type": "Association", "legal": "NGO (Non-Governmental Organization)", "specificity": {"Women": 1, "Research center": 1, "Youth": 1, "Other": 1, "Other_texto": "Communities"}, "actions": {"P11": {"Land recovery": true, "Protection of ancestral lands and sacred sites": true, "Community monitoring and territorial governance": true, "Advocacy regarding extractive megaprojects": false}, "P12": {"Implementation of climate change strategies": true, "Nature and environmental conservation mechanisms": true, "Planning and participation in international environmental dialogues": true}, "P13": {"Access to water and quality of life": true, "Productive projects and sustainable economic empowerment": true}, "P14": {"Women’s empowerment through capacity building": true, "Prevention of gender-based violence": true, "Participation in decision-making processes related to women’s rights": true}, "P15": {"Alternative education": false, "Revitalization of Indigenous languages": true, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": true}, "P17": {"Research, documentation, and dissemination": true, "Health-related processes": true, "Other": "Training communities on first aid responses"}, "P16": {"Interinstitutional dialogue and positioning": true, "Policy development": true, "Networks and partnerships": true, "Other": "Leadership training and exchange learning"}, "P18": {"Advocacy for the right to self-determination": true, "Documentation of human rights violations": true, "Advocacy for protection mechanisms for Indigenous defenders": false, "Access to international mechanisms": false}}}, {"org": "Tumana Agency for Development (TAD)", "scope": "Local", "type": "Association", "legal": "Indigenous governance", "specificity": {"Women": 1, "Research center": 0, "Youth": 1, "Other": 0, "Other_texto": ""}, "actions": {"P11": {"Land recovery": false, "Protection of ancestral lands and sacred sites": false, "Community monitoring and territorial governance": true, "Advocacy regarding extractive megaprojects": true}, "P12": {"Implementation of climate change strategies": true, "Nature and environmental conservation mechanisms": true, "Planning and participation in international environmental dialogues": true}, "P13": {"Access to water and quality of life": true, "Productive projects and sustainable economic empowerment": true}, "P14": {"Women’s empowerment through capacity building": true, "Prevention of gender-based violence": true, "Participation in decision-making processes related to women’s rights": true}, "P15": {"Alternative education": false, "Revitalization of Indigenous languages": false, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": false}, "P17": {"Research, documentation, and dissemination": false, "Health-related processes": true}, "P16": {"Interinstitutional dialogue and positioning": false, "Policy development": false, "Networks and partnerships": true}, "P18": {"Advocacy for the right to self-determination": true, "Documentation of human rights violations": false, "Advocacy for protection mechanisms for Indigenous defenders": true, "Access to international mechanisms": false}}}, {"org": "Save Lamu", "scope": "Local", "type": "Consortium", "legal": "Community Organisation", "specificity": {"Women": 1, "Research center": 1, "Youth": 1, "Other": 0, "Other_texto": ""}, "actions": {"P11": {"Land recovery": true, "Protection of ancestral lands and sacred sites": false, "Community monitoring and territorial governance": false, "Advocacy regarding extractive megaprojects": true}, "P12": {"Implementation of climate change strategies": true, "Nature and environmental conservation mechanisms": true, "Planning and participation in international environmental dialogues": true}, "P13": {"Access to water and quality of life": false, "Productive projects and sustainable economic empowerment": true}, "P14": {"Women’s empowerment through capacity building": true, "Prevention of gender-based violence": false, "Participation in decision-making processes related to women’s rights": true}, "P15": {"Alternative education": false, "Revitalization of Indigenous languages": false, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": true}, "P17": {"Research, documentation, and dissemination": true, "Health-related processes": false, "Other": "Advocacy, awareness creation, women empowerment in decisionmaking processes"}, "P16": {"Interinstitutional dialogue and positioning": true, "Policy development": false, "Networks and partnerships": true}, "P18": {"Advocacy for the right to self-determination": true, "Documentation of human rights violations": true, "Advocacy for protection mechanisms for Indigenous defenders": true, "Access to international mechanisms": false}}}, {"org": "Initiative for Development in Northern Kenya(IDNK)", "scope": "National", "type": "NGO", "legal": "NGO (Non-Governmental Organization)", "specificity": {"Women": 1, "Research center": 0, "Youth": 1, "Other": 0, "Other_texto": ""}, "actions": {"P11": {"Land recovery": false, "Protection of ancestral lands and sacred sites": false, "Community monitoring and territorial governance": false, "Advocacy regarding extractive megaprojects": false, "Other": "So far we are creating awareness on women right to own land and to be involved in decision making about thier land"}, "P12": {"Implementation of climate change strategies": true, "Nature and environmental conservation mechanisms": true, "Planning and participation in international environmental dialogues": false}, "P13": {"Access to water and quality of life": true, "Productive projects and sustainable economic empowerment": true}, "P14": {"Women’s empowerment through capacity building": false, "Prevention of gender-based violence": true, "Participation in decision-making processes related to women’s rights": true}, "P15": {"Alternative education": false, "Revitalization of Indigenous languages": true, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": false}, "P17": {"Research, documentation, and dissemination": false, "Health-related processes": true, "Other": "Lifelihood, education, culture"}, "P16": {"Interinstitutional dialogue and positioning": false, "Policy development": false, "Networks and partnerships": true}, "P18": {"Advocacy for the right to self-determination": true, "Documentation of human rights violations": false, "Advocacy for protection mechanisms for Indigenous defenders": false, "Access to international mechanisms": false, "Other": "Advocacy for women and child right"}}}, {"org": "Ababuro Culture Conservation and Development", "scope": "Local", "type": "Indiginous led Community Based Organization", "legal": "CBO", "specificity": {"Women": 0, "Research center": 0, "Youth": 0, "Other": 1, "Other_texto": "Indiginous/cultural ⁹"}, "actions": {"P11": {"Land recovery": false, "Protection of ancestral lands and sacred sites": true, "Community monitoring and territorial governance": true, "Advocacy regarding extractive megaprojects": false}, "P12": {"Implementation of climate change strategies": false, "Nature and environmental conservation mechanisms": true, "Planning and participation in international environmental dialogues": false}, "P13": {"Access to water and quality of life": false, "Productive projects and sustainable economic empowerment": false}, "P14": {"Women’s empowerment through capacity building": false, "Prevention of gender-based violence": false, "Participation in decision-making processes related to women’s rights": false, "Other": "Just work within framework of traditional mechanism"}, "P15": {"Alternative education": false, "Revitalization of Indigenous languages": false, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": true}, "P17": {"Research, documentation, and dissemination": true, "Health-related processes": false, "Other": "Indiginous knowledge , Governance support to traditional institution, community peaccoexistance,"}, "P16": {"Interinstitutional dialogue and positioning": true, "Policy development": false, "Networks and partnerships": false}, "P18": {"Advocacy for the right to self-determination": false, "Documentation of human rights violations": false, "Advocacy for protection mechanisms for Indigenous defenders": true, "Access to international mechanisms": false}}}, {"org": "Rupa Farmers Self Help Group", "scope": "Local", "type": "Self Help Group", "legal": "Indigenous governance", "specificity": {"Women": 1, "Research center": 0, "Youth": 0, "Other": 0, "Other_texto": ""}, "actions": {"P11": {"Land recovery": false, "Protection of ancestral lands and sacred sites": false, "Community monitoring and territorial governance": true, "Advocacy regarding extractive megaprojects": false}, "P12": {"Implementation of climate change strategies": true, "Nature and environmental conservation mechanisms": false, "Planning and participation in international environmental dialogues": false}, "P13": {"Access to water and quality of life": false, "Productive projects and sustainable economic empowerment": true}, "P14": {"Women’s empowerment through capacity building": true, "Prevention of gender-based violence": false, "Participation in decision-making processes related to women’s rights": false}, "P15": {"Alternative education": false, "Revitalization of Indigenous languages": false, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": false}, "P17": {"Research, documentation, and dissemination": false, "Health-related processes": false, "Other": "Farming"}, "P16": {"Interinstitutional dialogue and positioning": false, "Policy development": false, "Networks and partnerships": true}, "P18": {"Advocacy for the right to self-determination": true, "Documentation of human rights violations": false, "Advocacy for protection mechanisms for Indigenous defenders": false, "Access to international mechanisms": false}}}, {"org": "Volta Young Farmers Association", "scope": "National", "type": "Association", "legal": "NGO (Non-Governmental Organization)", "specificity": {"Women": 0, "Research center": 0, "Youth": 1, "Other": 0, "Other_texto": ""}, "actions": {"P11": {"Land recovery": true, "Protection of ancestral lands and sacred sites": false, "Community monitoring and territorial governance": true, "Advocacy regarding extractive megaprojects": false}, "P12": {"Implementation of climate change strategies": true, "Nature and environmental conservation mechanisms": true, "Planning and participation in international environmental dialogues": false}, "P13": {"Access to water and quality of life": true, "Productive projects and sustainable economic empowerment": true}, "P14": {"Women’s empowerment through capacity building": true, "Prevention of gender-based violence": true, "Participation in decision-making processes related to women’s rights": true}, "P15": {"Alternative education": true, "Revitalization of Indigenous languages": false, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": true}, "P17": {"Research, documentation, and dissemination": true, "Health-related processes": false}, "P16": {"Interinstitutional dialogue and positioning": true, "Policy development": true, "Networks and partnerships": false}, "P18": {"Advocacy for the right to self-determination": true, "Documentation of human rights violations": false, "Advocacy for protection mechanisms for Indigenous defenders": true, "Access to international mechanisms": false}}}, {"org": "Ogiek Peoples Development Program (OPDP)", "scope": "National", "type": "Association", "legal": "NGO (Non-Governmental Organization)", "specificity": {"Women": 0, "Research center": 0, "Youth": 0, "Other": 1, "Other_texto": "Indigenous Peoples"}, "actions": {"P11": {"Land recovery": false, "Protection of ancestral lands and sacred sites": true, "Community monitoring and territorial governance": false, "Advocacy regarding extractive megaprojects": false, "Other": "Advocacy on the implementation of African Court decisions"}, "P12": {"Implementation of climate change strategies": true, "Nature and environmental conservation mechanisms": true, "Planning and participation in international environmental dialogues": false}, "P13": {"Access to water and quality of life": false, "Productive projects and sustainable economic empowerment": true, "Other": "Supporting Agroecology practices"}, "P14": {"Women’s empowerment through capacity building": true, "Prevention of gender-based violence": true, "Participation in decision-making processes related to women’s rights": true, "Other": "Promoting partnership and networking"}, "P15": {"Alternative education": true, "Revitalization of Indigenous languages": true, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": true, "Other": "Equipping of the museum with Ogiek artifacts"}, "P17": {"Research, documentation, and dissemination": true, "Health-related processes": false, "Other": "Community engagement, advocacy, capacity building training, partnership and networking"}, "P16": {"Interinstitutional dialogue and positioning": true, "Policy development": false, "Networks and partnerships": true, "Other": "Community led-engagement"}, "P18": {"Advocacy for the right to self-determination": true, "Documentation of human rights violations": true, "Advocacy for protection mechanisms for Indigenous defenders": true, "Access to international mechanisms": false, "Other": "Capacity Training on legal existing framework,  Offering of legal Aid support"}}}, {"org": "Kivulini Trust", "scope": "Local", "type": "NGO", "legal": "NGO (Non-Governmental Organization)", "specificity": {"Women": 0, "Research center": 0, "Youth": 0, "Other": 1, "Other_texto": "Cultural heritage"}, "actions": {"P11": {"Land recovery": false, "Protection of ancestral lands and sacred sites": true, "Community monitoring and territorial governance": true, "Advocacy regarding extractive megaprojects": false}, "P12": {"Implementation of climate change strategies": false, "Nature and environmental conservation mechanisms": false, "Planning and participation in international environmental dialogues": false, "Other": "Related indigenous knowledge"}, "P13": {"Access to water and quality of life": true, "Productive projects and sustainable economic empowerment": false, "Other": "Women micro enterprises"}, "P14": {"Women’s empowerment through capacity building": true, "Prevention of gender-based violence": false, "Participation in decision-making processes related to women’s rights": false}, "P15": {"Alternative education": true, "Revitalization of Indigenous languages": true, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": true}, "P17": {"Research, documentation, and dissemination": true, "Health-related processes": false}, "P16": {"Interinstitutional dialogue and positioning": false, "Policy development": false, "Networks and partnerships": true}, "P18": {"Advocacy for the right to self-determination": false, "Documentation of human rights violations": false, "Advocacy for protection mechanisms for Indigenous defenders": false, "Access to international mechanisms": false, "Other": "Community land registration"}}}, {"org": "Gabis Women Group", "scope": "Local", "type": "Community based organization", "legal": "Indigenous Peoples organization,  Women-led", "specificity": {"Women": 1, "Research center": 0, "Youth": 1, "Other": 0, "Other_texto": ""}, "actions": {"P11": {"Land recovery": false, "Protection of ancestral lands and sacred sites": false, "Community monitoring and territorial governance": true, "Advocacy regarding extractive megaprojects": false}, "P12": {"Implementation of climate change strategies": false, "Nature and environmental conservation mechanisms": true, "Planning and participation in international environmental dialogues": false}, "P13": {"Access to water and quality of life": false, "Productive projects and sustainable economic empowerment": true}, "P14": {"Women’s empowerment through capacity building": true, "Prevention of gender-based violence": false, "Participation in decision-making processes related to women’s rights": true}, "P15": {"Alternative education": false, "Revitalization of Indigenous languages": true, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": true}, "P17": {"Research, documentation, and dissemination": true, "Health-related processes": false}, "P16": {"Interinstitutional dialogue and positioning": false, "Policy development": false, "Networks and partnerships": true}, "P18": {"Advocacy for the right to self-determination": true, "Documentation of human rights violations": false, "Advocacy for protection mechanisms for Indigenous defenders": false, "Access to international mechanisms": false}}}, {"org": "San Women Botswana", "scope": "National", "type": "Association", "legal": "Indigenous governance", "specificity": {"Women": 1, "Research center": 0, "Youth": 1, "Other": 0, "Other_texto": ""}, "actions": {"P11": {"Land recovery": false, "Protection of ancestral lands and sacred sites": true, "Community monitoring and territorial governance": false, "Advocacy regarding extractive megaprojects": true}, "P12": {"Implementation of climate change strategies": true, "Nature and environmental conservation mechanisms": true, "Planning and participation in international environmental dialogues": false}, "P13": {"Access to water and quality of life": true, "Productive projects and sustainable economic empowerment": true}, "P14": {"Women’s empowerment through capacity building": true, "Prevention of gender-based violence": true, "Participation in decision-making processes related to women’s rights": true}, "P15": {"Alternative education": true, "Revitalization of Indigenous languages": true, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": true}, "P17": {"Research, documentation, and dissemination": true, "Health-related processes": true}, "P16": {"Interinstitutional dialogue and positioning": true, "Policy development": true, "Networks and partnerships": true}, "P18": {"Advocacy for the right to self-determination": true, "Documentation of human rights violations": true, "Advocacy for protection mechanisms for Indigenous defenders": true, "Access to international mechanisms": true}}}, {"org": "Mwedo", "scope": "Local", "type": "Association", "legal": "NGO (Non-Governmental Organization)", "specificity": {"Women": 1, "Research center": 0, "Youth": 1, "Other": 0, "Other_texto": ""}, "actions": {"P11": {"Land recovery": true, "Protection of ancestral lands and sacred sites": false, "Community monitoring and territorial governance": false, "Advocacy regarding extractive megaprojects": false}, "P12": {"Implementation of climate change strategies": false, "Nature and environmental conservation mechanisms": true, "Planning and participation in international environmental dialogues": false}, "P13": {"Access to water and quality of life": false, "Productive projects and sustainable economic empowerment": true}, "P14": {"Women’s empowerment through capacity building": true, "Prevention of gender-based violence": false, "Participation in decision-making processes related to women’s rights": false}, "P15": {"Alternative education": false, "Revitalization of Indigenous languages": false, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": false}, "P17": {"Research, documentation, and dissemination": false, "Health-related processes": false, "Other": "Education, economic empowerment, health"}, "P16": {"Interinstitutional dialogue and positioning": false, "Policy development": false, "Networks and partnerships": true}, "P18": {"Advocacy for the right to self-determination": true, "Documentation of human rights violations": false, "Advocacy for protection mechanisms for Indigenous defenders": false, "Access to international mechanisms": false}}}, {"org": "Ardha Jabesa Foundation", "scope": "National", "type": "NGO", "legal": "NGO (Non-Governmental Organization)", "specificity": {"Women": 1, "Research center": 0, "Youth": 1, "Other": 1, "Other_texto": "Indigenous pastoralists Communities"}, "actions": {"P11": {"Land recovery": false, "Protection of ancestral lands and sacred sites": true, "Community monitoring and territorial governance": true, "Advocacy regarding extractive megaprojects": false}, "P12": {"Implementation of climate change strategies": true, "Nature and environmental conservation mechanisms": true, "Planning and participation in international environmental dialogues": true}, "P13": {"Access to water and quality of life": false, "Productive projects and sustainable economic empowerment": true, "Other": "Livelihood support programs to indigenous women and youth climate smart agriculture"}, "P14": {"Women’s empowerment through capacity building": true, "Prevention of gender-based violence": true, "Participation in decision-making processes related to women’s rights": true}, "P15": {"Alternative education": true, "Revitalization of Indigenous languages": false, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": true}, "P17": {"Research, documentation, and dissemination": false, "Health-related processes": false, "Other": "Facilitation of securing tenure rights, climate change interventions, Rangeland Restoration, Livelihoods enhancement, Intergenerational knowledge transfer sytems and Documentation"}, "P16": {"Interinstitutional dialogue and positioning": true, "Policy development": false, "Networks and partnerships": true}, "P18": {"Advocacy for the right to self-determination": true, "Documentation of human rights violations": true, "Advocacy for protection mechanisms for Indigenous defenders": false, "Access to international mechanisms": false}}}, {"org": "JAMII ASILIA CENTRE", "scope": "Local", "type": "Institute- Center", "legal": "NGO (Non-Governmental Organization)", "specificity": {"Women": 0, "Research center": 1, "Youth": 1, "Other": 1, "Other_texto": "Indigenous rights advocacy"}, "actions": {"P11": {"Land recovery": false, "Protection of ancestral lands and sacred sites": true, "Community monitoring and territorial governance": true, "Advocacy regarding extractive megaprojects": false}, "P12": {"Implementation of climate change strategies": true, "Nature and environmental conservation mechanisms": true, "Planning and participation in international environmental dialogues": true}, "P13": {"Access to water and quality of life": false, "Productive projects and sustainable economic empowerment": true}, "P14": {"Women’s empowerment through capacity building": true, "Prevention of gender-based violence": false, "Participation in decision-making processes related to women’s rights": true}, "P15": {"Alternative education": false, "Revitalization of Indigenous languages": true, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": true}, "P17": {"Research, documentation, and dissemination": true, "Health-related processes": false}, "P16": {"Interinstitutional dialogue and positioning": true, "Policy development": true, "Networks and partnerships": true}, "P18": {"Advocacy for the right to self-determination": true, "Documentation of human rights violations": true, "Advocacy for protection mechanisms for Indigenous defenders": true, "Access to international mechanisms": true}}}, {"org": "Indigenous livelihoods enhancement partners - ILEPA", "scope": "National", "type": "Public Interest Organisation (PBO)- registered under the NGO Coordination Board", "legal": "NGO (Non-Governmental Organization)", "specificity": {"Women": 0, "Research center": 1, "Youth": 0, "Other": 1, "Other_texto": "Pastoralists communities"}, "actions": {"P11": {"Land recovery": true, "Protection of ancestral lands and sacred sites": true, "Community monitoring and territorial governance": true, "Advocacy regarding extractive megaprojects": true}, "P12": {"Implementation of climate change strategies": true, "Nature and environmental conservation mechanisms": true, "Planning and participation in international environmental dialogues": true}, "P13": {"Access to water and quality of life": true, "Productive projects and sustainable economic empowerment": true}, "P14": {"Women’s empowerment through capacity building": true, "Prevention of gender-based violence": false, "Participation in decision-making processes related to women’s rights": true}, "P15": {"Alternative education": false, "Revitalization of Indigenous languages": true, "Intergenerational transmission of knowledge": true, "Cultural production and historical memory": true}, "P17": {"Research, documentation, and dissemination": true, "Health-related processes": true}, "P16": {"Interinstitutional dialogue and positioning": true, "Policy development": true, "Networks and partnerships": true}, "P18": {"Advocacy for the right to self-determination": true, "Documentation of human rights violations": true, "Advocacy for protection mechanisms for Indigenous defenders": true, "Access to international mechanisms": true}}}], "themes": [{"id": "territorio", "title": "Territory, Life and Environment", "questions": [["P11", "What actions related to territorial rights and land defense does your organization carry out?", [["P11_Land_recovery", "Land recovery"], ["P11_Protection_of_ancestral_lands_and_sacred_sites", "Protection of ancestral lands and sacred sites"], ["P11_Community_monitoring_and_territorial_governance", "Community monitoring and territorial governance"], ["P11_Advocacy_regarding_extractive_megaprojects", "Advocacy regarding extractive megaprojects"], ["P11_Other_texto", "Other"]]], ["P12", "What actions related to environmental conservation, climate change, and biodiversity does your organization carry out?", [["P12_Implementation_of_climate_change_strategies", "Implementation of climate change strategies"], ["P12_Nature_and_environmental_conservation_mechanisms", "Nature and environmental conservation mechanisms"], ["P12_Planning_and_participation_in_international_environment", "Planning and participation in international environmental dialogues"], ["P12_Other_texto", "Other"]]], ["P13", "What actions related to livelihoods, self-sustained economies, and food sovereignty does your organization carry out?", [["P13_Access_to_water_and_quality_of_life", "Access to water and quality of life"], ["P13_Productive_projects_and_sustainable_economic_empowermen", "Productive projects and sustainable economic empowerment"], ["P13_Other_texto", "Other"]]]]}, {"id": "equidad", "title": "Women, Culture, Knowledge and Well-being", "questions": [["P14", "What actions related to gender, women’s leadership, and equity does your organization carry out?", [["P14_Women_s_empowerment_through_capacity_building", "Women’s empowerment through capacity building"], ["P14_Prevention_of_gender_based_violence", "Prevention of gender-based violence"], ["P14_Participation_in_decision_making_processes_related_to_w", "Participation in decision-making processes related to women’s rights"], ["P14_Other_texto", "Other"]]], ["P15", "What actions related to intercultural education and cultural revitalization does your organization carry out?", [["P15_Alternative_education", "Alternative education"], ["P15_Revitalization_of_Indigenous_languages", "Revitalization of Indigenous languages"], ["P15_Intergenerational_transmission_of_knowledge", "Intergenerational transmission of knowledge"], ["P15_Cultural_production_and_historical_memory", "Cultural production and historical memory"], ["P15_Other_texto", "Other"]]], ["P17", "What type of activities does your organization carry out?", [["P17_Research_documentation_and_dissemination", "Research, documentation, and dissemination"], ["P17_Health_related_processes", "Health-related processes"], ["P17_Other_texto", "Other"]]]]}, {"id": "gobernanza", "title": "Governance, Coordination and Rights", "questions": [["P16", "What actions related to governance and collective work does your organization carry out?", [["P16_Interinstitutional_dialogue_and_positioning", "Interinstitutional dialogue and positioning"], ["P16_Policy_development", "Policy development"], ["P16_Networks_and_partnerships", "Networks and partnerships"], ["P16_Other_texto", "Other"]]], ["P18", "What actions related to human rights defense and access to justice does your organization carry out?", [["P18_Advocacy_for_the_right_to_self_determination", "Advocacy for the right to self-determination"], ["P18_Documentation_of_human_rights_violations", "Documentation of human rights violations"], ["P18_Advocacy_for_protection_mechanisms_for_Indigenous_defen", "Advocacy for protection mechanisms for Indigenous defenders"], ["P18_Access_to_international_mechanisms", "Access to international mechanisms"], ["P18_Other_texto", "Other"]]]]}]};
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));}
+function unique(field){return [...new Set(DB.records.map(r=>r[field]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'es'));}
+
+function fillFilters(){
+ const maps=[['scope','scope'],['type','type'],['legal','legal']];
+ maps.forEach(([id,key])=>{
+   const el=document.getElementById(id);
+   unique(key).forEach(v=>el.insertAdjacentHTML('beforeend',`<option>${esc(v)}</option>`));
+ });
+ const org=document.getElementById('org');
+ DB.records.forEach((r,i)=>org.insertAdjacentHTML('beforeend',`<option value="${i}">${esc(r.org)}</option>`));
+ const as=document.getElementById('actionSelect');
+ as.innerHTML='<option value="">— Selecciona una acción —</option>';
+ DB.themes.forEach(t=>t.questions.forEach(([qid,qtitle,opts])=>{
+   const og=document.createElement('optgroup'); og.label=t.title+' · '+qtitle;
+   opts.filter(x=>!x[0].endsWith('_texto')).forEach(([variable,label])=>{
+      const o=document.createElement('option');o.value=qid+'||'+label;o.textContent=label;og.appendChild(o);
+   });
+   as.appendChild(og);
+ }));
+}
+
+function filtered(){
+ const q=document.getElementById('search').value.toLowerCase().trim();
+ const scope=document.getElementById('scope').value;
+ const type=document.getElementById('type').value;
+ const legal=document.getElementById('legal').value;
+ const spec=document.getElementById('specificity').value;
+ return DB.records.filter(r=>
+   (!q || r.org.toLowerCase().includes(q)) &&
+   (!scope || r.scope===scope) &&
+   (!type || r.type===type) &&
+   (!legal || r.legal===legal) &&
+   (!spec || r.specificity[spec]===1)
+ );
+}
+
+function render(){
+ const list=filtered();
+ document.getElementById('stats').innerHTML=`
+  <div class="stat"><b>${list.length}</b><span>organizations visible</span></div>
+  <div class="stat"><b>${new Set(list.map(r=>r.scope)).size}</b><span>territorial scopes</span></div>
+  <div class="stat"><b>${new Set(list.map(r=>r.type)).size}</b><span>organization types</span></div>
+  <div class="stat"><b>${countActions(list)}</b><span>actions reported</span></div>`;
+ if(!list.length){
+   document.getElementById('profile').innerHTML='<div class="empty">No organizations match the selected filters.</div>';
+   return;
+ }
+ const orgEl=document.getElementById('org');
+ const selectedIndex=Number(orgEl.value||0);
+ const selectedOrg=DB.records[selectedIndex];
+ if(!list.includes(selectedOrg)) {
+   const idx=DB.records.indexOf(list[0]); orgEl.value=idx;
+ }
+ renderProfile();
+ renderDirectory();
+}
+function countActions(list){
+ let n=0;
+ list.forEach(r=>DB.themes.forEach(t=>t.questions.forEach(([qid,qtitle,opts])=>opts.forEach(([variable,label])=>{
+   if(!variable.endsWith('_texto') && r.actions[qid]?.[label]) n++;
+ }))));
+ return n;
+}
+
+function renderProfile(){
+ const idx=Number(document.getElementById('org').value||0), r=DB.records[idx];
+ if(!r){return}
+ let html=`<div class="profile-head"><div><div class="org-name">${esc(r.org)}</div>
+ <div class="badges">${['Women','Research center','Youth'].filter(x=>r.specificity[x]).map(x=>`<span class="badge">${esc(x)}</span>`).join('')}${r.specificity.Other?`<span class="badge">Other specificity</span>`:''}</div></div></div>
+ <div class="meta">
+  <div class="meta-item"><small>Territorial scope</small><strong>${esc(r.scope)}</strong></div>
+  <div class="meta-item"><small>Organization type</small><strong>${esc(r.type)}</strong></div>
+  <div class="meta-item"><small>Legal nature</small><strong>${esc(r.legal)}</strong></div>
+ </div>`;
+ if(r.specificity.Other_texto) html+=`<div class="other"><strong>Other specificity:</strong> ${esc(r.specificity.Other_texto)}</div>`;
+ DB.themes.forEach(t=>{
+  html+=`<section class="theme"><div class="theme-title">${esc(t.title)}</div>`;
+  t.questions.forEach(([qid,qtitle,opts])=>{
+   html+=`<div class="qblock"><div class="qtitle">${esc(qtitle)}</div><div class="actions">`;
+   opts.filter(x=>!x[0].endsWith('_texto')).forEach(([variable,label])=>{
+     const yes=!!r.actions[qid]?.[label];
+     html+=`<span class="action ${yes?'yes':'no'}">${yes?'✓':'○'} ${esc(label)}</span>`;
+   });
+   html+='</div>';
+   const other=opts.find(x=>x[0].endsWith('_texto'));
+   const val=other?r.actions[qid]?.[other[1]]:'';
+   if(val) html+=`<div class="other"><strong>Other:</strong> ${esc(val)}</div>`;
+   html+='</div>';
+  });
+  html+='</section>';
+ });
+ document.getElementById('profile').innerHTML=html;
+}
+function renderDirectory(){
+ const value=document.getElementById('actionSelect').value;
+ const box=document.getElementById('directory');
+ if(!value){box.innerHTML='<div class="empty">Select an action to see the organizations that carry it out.</div>';return;}
+ const [qid,label]=value.split('||');
+ const list=filtered().filter(r=>r.actions[qid]?.[label]===true);
+ box.innerHTML=list.length?`<div class="org-list">${list.map(r=>`<div class="org-result"><strong>${esc(r.org)}</strong><span>${esc(r.scope)}</span></div>`).join('')}</div>`
+ :'<div class="empty">Ninguna de las organizations visible registra esta acción.</div>';
+}
+document.getElementById('org').addEventListener('change',renderProfile);
+fillFilters();
+render();
+</script>
+</body>
+</html>
